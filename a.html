@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Ticket Reservation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+    <style>
+        /* Previous styles... */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(3, 74, 5, 0.445);
+            background-size: cover;
+            color: #333;
+        }
+        header {
+            background-color: rgba(3, 74, 5, 0.445);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: rgba(1, 12, 1, 0.8);
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Additional styles... */
+        .hero {
+            background-image: url('https://imgs.search.brave.com/N2h8KdkjxAldIc6Uw3tPhaHVWAz-3tJN7eyn-PTquHg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA1LzIyLzI4Lzg4/LzM2MF9GXzUyMjI4/ODg0NF91T2hXOGRR/QWI5YTVrTHpaanJW/ZkJ5SGVyVG12alRa/bS5qcGc');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .alert {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+        }
+        .available {
+            background-color: #4caf50;
+            color: white;
+        }
+        .booked {
+            background-color: #d9534f;
+            color: white;
+            cursor: not-allowed;
+        }
+        .selected {
+            background-color: #ffc107;
+            color: white;
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .schedule-table th {
+            background-color: #f2f2f2;
+        }
+        .ticket-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .ticket-summary h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bus Ticket Reservation System</h1>
+        <nav>
+            <a href="#" onclick="showPage('home')">Home</a>
+            <a href="#" onclick="showPage('booking')">Book Ticket</a>
+            <a href="#" onclick="showPage('cancellation')">Cancel Ticket</a>
+            <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
+            <a href="#" onclick="showPage('myBookings')">My Bookings</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="home">
+            <div class="hero"></div>
+            <h2>Welcome to Our Bus Ticket Reservation System</h2>
+            <p>Book your tickets online with real-time availability.</p>
+            <img src=https://imgs.search.brave.com/l4GDIEm_vkKQoO3lKB_lCzbLyfEbQzrwYSXWIl1B-_I/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by92YXJpb3VzLXRv/dXJpc3QtYnVzZXMt/bGluZWRfOTgxMTY4/LTM3NzYuanBn alt="Bus Image">
+            <div class="services">
+                <h2>Our Services</h2>
+                <div class="service">
+                    <i class="fas fa-bus"></i>
+                    <p>Comfortable and Safe Travel</p>
+                    <button class="service-button" onclick="toggleLearnMore('service1')">Learn More</button>
+                    <div id="service1" class="learn-more-content">We offer comfortable seating, air conditioning, and refreshments for a pleasant journey.</div>
+                </div>
+                <div class="service">
+                    <i class="fas fa-clock"></i>
+                    <p>Real-Time Schedule Updates</p>
+                    <button class="service-button" onclick="toggleLearnMore('service2')">Learn More</button>
+                    <div id="service2" class="learn-more-content">Get real-time updates about bus schedules and delays right on your device.</div>
+                </div>
+                <div class="service">
+                    <i class="fas fa-credit-card"></i>
+                    <p>Secure Online Payment</p>
+                    <button class="service-button" onclick="toggleLearnMore('service3')">Learn More</button>
+                    <div id="service3" class="learn-more-content">Our payment system is secure and supports multiple payment methods.</div>
+                </div>
+                <div class="service">
+                    <i class="fas fa-headset"></i>
+                    <p>24/7 Customer Support</p>
+                    <button class="service-button" onclick="toggleLearnMore('service4')">Learn More</button>
+                    <div id="service4" class="learn-more-content">Our customer support team is available 24/7 to assist you with any inquiries.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="booking" class="hidden">
+            <h2>Book Your Ticket</h2>
+            <form id="bookingForm">
+                <label for="origin">Origin:</label>
+                <input type="text" id="origin" placeholder="Enter your starting location" required>
+
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" placeholder="Enter your destination" required>
+
+                <label for="travelDate">Travel Date:</label>
+                <input type="date" id="travelDate" required>
+
+                <label for="travelTime">Travel Time:</label>
+                <input type="time" id="travelTime" required>
+
+                <label for="busType">Select Bus Type:</label>
+                <select id="busType" required onchange="updateSeatSelection()">
+                    <option value="">Select Bus Type</option>
+                    <option value="sleeper">Sleeper</option>
+                    <option value="seater">Seater</option>
+                </select>
+
+                <label for="busId">Select Bus:</label>
+                <select id="busId" required onchange="updateSeatSelection()">
+                    <option value="">Select a bus</option>
+                    <option value="1">Sleeper Bus - $50</option>
+                    <option value="2">Seater Bus - $30</option>
+                </select>
+
+                <p id="seatSelection">Select Your Seats:</p>
+                <div id="seatContainer"></div>
+
+                <button type="submit">Book Ticket</button>
+            </form>
+            <div id="bookingMessage" class="alert hidden"></div>
+            <div id="ticketSummary" class="ticket-summary hidden"></div>
+        </div>
+
+        <div id="cancellation" class="hidden">
+            <h2>Cancel Your Ticket</h2>
+            <form id="cancellationForm">
+                <label for="bookingIdCancel">Enter Booking ID:</label>
+                <input type="text" id="bookingIdCancel" placeholder="Enter your Booking ID" required>
+                <button type="submit">Cancel Ticket</button>
+            </form>
+            <div id="cancellationMessage" class="alert hidden"></div>
+        </div>
+
+        <div id="admin" class="hidden">
+            <h2>Admin Dashboard</h2>
+            <h3>Manage Schedule</h3>
+            <form id="scheduleForm">
+                <label for="busOrigin">Bus Origin:</label>
+                <input type="text" id="busOrigin" required>
+                <label for="busDestination">Bus Destination:</label>
+                <input type="text" id="busDestination" required>
+                <label for="busDate">Travel Date:</label>
+                <input type="date" id="busDate" required>
+                <label for="busTime">Travel Time:</label>
+                <input type="time" id="busTime" required>
+                <button type="submit">Add Schedule</button>
+            </form>
+            <div id="scheduleMessage" class="alert hidden"></div>
+            <h3>Booked Tickets</h3>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Travel Date</th>
+                        <th>Seats</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="bookedTickets"></tbody>
+            </table>
+        </div>
+
+        <div id="myBookings" class="hidden">
+            <h2>My Bookings</h2>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Travel Date</th>
+                        <th>Seats</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="myBookedTickets"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bus Ticket Reservation System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let bookedTickets = [];
+        let selectedSeats = [];
+        let bookingCounter = 1;
+
+        function showPage(page) {
+            const pages = ['home', 'booking', 'cancellation', 'admin', 'myBookings'];
+            pages.forEach(p => {
+                document.getElementById(p).classList.add('hidden');
+            });
+            document.getElementById(page).classList.remove('hidden');
+
+            if (page === 'admin') {
+                loadBookedTickets();
+            } else if (page === 'myBookings') {
+                loadMyBookings();
+            }
+        }
+
+        function toggleLearnMore(serviceId) {
+            const content = document.getElementById(serviceId);
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateSeatSelection() {
+            const seatContainer = document.getElementById('seatContainer');
+            seatContainer.innerHTML = ''; // Clear previous selections
+            selectedSeats = []; // Reset selected seats
+
+            // Create 40 available seats for each bus type
+            for (let i = 1; i <= 40; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat available';
+                seat.textContent = i;
+                seat.onclick = () => toggleSeatSelection(seat, i);
+                seatContainer.appendChild(seat);
+            }
+        }
+
+        function toggleSeatSelection(seat, seatNumber) {
+            if (seat.classList.contains('available')) {
+                seat.classList.remove('available');
+                seat.classList.add('selected');
+                selectedSeats.push(seatNumber);
+            } else if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                seat.classList.add('available');
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+            }
+        }
+
+        document.getElementById('bookingForm').onsubmit = function(event) {
+            event.preventDefault();
+            const origin = document.getElementById('origin').value;
+            const destination = document.getElementById('destination').value;
+            const travelDate = document.getElementById('travelDate').value;
+            const travelTime = document.getElementById('travelTime').value;
+            const busId = document.getElementById('busId').value;
+            const bookingId = 'BID' + bookingCounter++;
+            const bookedSeats = selectedSeats.join(', ');
+
+            let ticketPrice = 0;
+            if (busId === "1") {
+                ticketPrice = 50; // Sleeper Bus
+            } else if (busId === "2") {
+                ticketPrice = 30; // Seater Bus
+            }
+            const totalPrice = selectedSeats.length * ticketPrice;
+
+            bookedTickets.push({ bookingId, origin, destination, travelDate, seats: bookedSeats, price: totalPrice });
+            document.getElementById('bookingMessage').textContent = 'Ticket booked successfully! Booking ID: ' + bookingId + ', Total Price: $' + totalPrice;
+            document.getElementById('bookingMessage').classList.remove('hidden');
+
+            // Display the ticket summary
+            displayTicketSummary(bookingId, origin, destination, travelDate, bookedSeats, totalPrice);
+
+            // Clear form and reset seats
+            document.getElementById('bookingForm').reset();
+            updateSeatSelection();
+        };
+
+        function displayTicketSummary(bookingId, origin, destination, travelDate, bookedSeats, totalPrice) {
+            const ticketSummary = document.getElementById('ticketSummary');
+            ticketSummary.innerHTML = `
+                <h3>Your Ticket Summary</h3>
+                <p><strong>Booking ID:</strong> ${bookingId}</p>
+                <p><strong>Origin:</strong> ${origin}</p>
+                <p><strong>Destination:</strong> ${destination}</p>
+                <p><strong>Travel Date:</strong> ${travelDate}</p>
+                <p><strong>Seats Booked:</strong> ${bookedSeats}</p>
+                <p><strong>Total Price:</strong> $${totalPrice}</p>
+            `;
+            ticketSummary.classList.remove('hidden');
+        }
+
+        document.getElementById('cancellationForm').onsubmit = function(event) {
+            event.preventDefault();
+            const bookingId = document.getElementById('bookingIdCancel').value;
+            const index = bookedTickets.findIndex(ticket => ticket.bookingId === bookingId);
+            if (index !== -1) {
+                bookedTickets.splice(index, 1);
+                document.getElementById('cancellationMessage').textContent = 'Ticket with Booking ID ' + bookingId + ' has been canceled.';
+            } else {
+                document.getElementById('cancellationMessage').textContent = 'Booking ID not found.';
+            }
+            document.getElementById('cancellationMessage').classList.remove('hidden');
+        };
+
+        document.getElementById('scheduleForm').onsubmit = function(event) {
+            event.preventDefault();
+            const busOrigin = document.getElementById('busOrigin').value;
+            const busDestination = document.getElementById('busDestination').value;
+            const busDate = document.getElementById('busDate').value;
+            const busTime = document.getElementById('busTime').value;
+
+            // Here, you would save the schedule (in practice, you would send this to a server)
+            document.getElementById('scheduleMessage').textContent = `Schedule added: ${busOrigin} to ${busDestination} on ${busDate} at ${busTime}.`;
+            document.getElementById('scheduleMessage').classList.remove('hidden');
+        };
+
+        function loadBookedTickets() {
+            const bookedTicketsTable = document.getElementById('bookedTickets');
+            bookedTicketsTable.innerHTML = '';
+            bookedTickets.forEach(ticket => {
+                const row = `<tr>
+                    <td>${ticket.bookingId}</td>
+                    <td>${ticket.origin}</td>
+                    <td>${ticket.destination}</td>
+                    <td>${ticket.travelDate}</td>
+                    <td>${ticket.seats}</td>
+                    <td>$${ticket.price}</td>
+                </tr>`;
+                bookedTicketsTable.innerHTML += row;
+            });
+        }
+
+        function loadMyBookings() {
+            const myBookedTicketsTable = document.getElementById('myBookedTickets');
+            myBookedTicketsTable.innerHTML = '';
+            bookedTickets.forEach(ticket => {
+                const row = `<tr>
+                    <td>${ticket.bookingId}</td>
+                    <td>${ticket.origin}</td>
+                    <td>${ticket.destination}</td>
+                    <td>${ticket.travelDate}</td>
+                    <td>${ticket.seats}</td>
+                    <td>$${ticket.price}</td>
+                </tr>`;
+                myBookedTicketsTable.innerHTML += row;
+            });
+        }
+    </script>
+</body>
+</html>
